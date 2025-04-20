@@ -1,0 +1,31 @@
+
+services:
+  app:
+    build:
+      context: .
+    container_name: microcode-app
+    volumes:
+      - .:/var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  db:
+    image: mysql:8.0
+    container_name: microcode-db
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_DATABASE: microcode
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
+
+
