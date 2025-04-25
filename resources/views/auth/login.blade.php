@@ -10,6 +10,16 @@
                     </div>
 
                     <div class="card-body p-4">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <strong>Oops!</strong> Kuch problems hain:<br><br>
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <!-- Login Form -->
                         <form id="login-form"> <!-- Add id here -->
                             @csrf
@@ -63,6 +73,28 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- Axios -->
 
+    <!-- <script>
+                document.getElementById('login-form').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+
+                    axios.post('/login', {
+                        email: email,
+                        password: password
+                    }).then(response => {
+                        const token = response.data.access_token;
+                        localStorage.setItem('access_token', token);
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                        window.location.href = '/customers';  // Login ke baad customers page pe redirect karo
+                    }).catch(error => {
+                        console.error('Login failed', error);
+                    });
+                });
+            </script> -->
+
+
     <script>
         document.getElementById('login-form').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -77,9 +109,21 @@
                 const token = response.data.access_token;
                 localStorage.setItem('access_token', token);
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                window.location.href = '/customers';  // Login ke baad customers page pe redirect karo
+                window.location.href = '/customers';
             }).catch(error => {
-                console.error('Login failed', error);
+                if (error.response && error.response.status === 422) {
+                    const errors = error.response.data.errors;
+
+                    if (errors.email) {
+                        alert('Email: ' + errors.email[0]);
+                    }
+
+                    if (errors.password) {
+                        alert('Password: ' + errors.password[0]);
+                    }
+                } else {
+                    alert('Login failed. Please try again.');
+                }
             });
         });
     </script>

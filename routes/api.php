@@ -26,6 +26,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group(function () {
     // Route::apiResource('customers', CustomerController::class);
 
+    // Route::get('/customers/create', [CustomerController::class, 'createForm'])->name('customers.form');
+
     Route::get('/customers', [CustomerController::class, 'index']);
     Route::post('/customers', [CustomerController::class, 'store']);
     Route::get('customers/{id}', [CustomerController::class, 'show']);
